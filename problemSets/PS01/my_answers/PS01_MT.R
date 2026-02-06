@@ -60,7 +60,7 @@ D_statistic <- function(data){
   for (i in seq_along(empiricalCDF)) {
   
   denominator <- denominator +
-    exp(-((2 * i)^2) * pi^2 / (8 * D^2))
+    exp(-((2 * i - 1)^2) * pi^2 / (8 * D^2))
   }
 
   p_value <- (sqrt(2*pi) / D) * denominator 
@@ -91,17 +91,18 @@ data_PS1_2 <- data.frame(x = runif(200, 1, 10))
 data_PS1_2$y <- 0 + 2.75*data_PS1_2$x + rnorm(200, 0, 1.5)
 
 
-min_RSS <- function(betas, data) {
+min_RSS <- function(betas, y, x) {
   beta0 <- betas[1]
   beta1 <- betas[2]
-  y_hat <- beta0 + beta1 * data$x
-  residuals <- data$y - y_hat
+  y_hat <- beta0 + beta1 * x
+  residuals <- y - y_hat
   sum(residuals^2)
 }
 
 estimated_betas <- optim(par = c(0,0), 
       fn = min_RSS, 
-      data = data_PS1_2, 
+      y = data_PS1_2$y,
+      x = data_PS1_2$x,,
       method = "BFGS")
 
 coefficients_BFGS <- estimated_betas$par
