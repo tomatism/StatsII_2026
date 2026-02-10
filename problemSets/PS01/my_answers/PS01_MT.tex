@@ -32,6 +32,8 @@
 \usepackage{url}
 \usepackage{listings}
 \usepackage{color}
+\usepackage{booktabs}
+
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -99,11 +101,89 @@ $$p(D \leq d)= \frac{\sqrt {2\pi}}{d} \sum _{k=1}^{\infty }e^{-(2k-1)^{2}\pi ^{2
 	# generate test statistic
 	D <- max(abs(empiricalCDF - pnorm(data))) \end{lstlisting}
 
-\vspace{3in}
+\vspace{2cm}
+
+\noindent\textbf{Answer 1}\\
+\vspace{0.5cm}
+
+\noindent Firstly, empirical data is created with 1000 Cauchy random variables. 
+
+\vspace{0.5cm}
+\lstinputlisting[language=R, firstline=43, lastline=43]{PS01_MT.R}
+
+\noindent The implemented procedure corresponds to a simplified version of the Kolmogorov--Smirnov goodness-of-fit test, which uses cumulative distribution statistics to assess the similarity between the empirical distribution of observed data and a specified probability density function.
+
+\noindent A function is created, \texttt{D\_statistic}. It takes as input the empirical data and returns as output the D-statistic, the p-value and an evaluation of the test. The function initially computes the empirical distribution of the previously created data; afterwards, the maximum absolute difference between the empirical distribution and a normal distribution. This step clarifies that we are testing whether the observed empirical distribution could be equal to a normal distribution.
+
+\noindent A \texttt{for} loop is then created to compute the denominator of the p-value formula, looping over each observation. Once this quantity is obtained, the p-value is calculated..
+
+\noindent The purpose of this function is to test whether the empirical distribution is equal to a normal distribution; thus, the null hypothesis supports this statement. A p-value smaller than 0.05 would indicate that the two distributions, empirical and normal, are statistically different.
+
+\vspace{0.5cm}
+\lstinputlisting[language=R, firstline=50, lastline=78]{PS01_MT.R}
+
+\vspace{0.5cm}
+\noindent The function is finally run using as input the Cauchy data initially created. The results follow, comprising the D-statistic, the associated p-value and an evaluation of the null hypothesis with respect to a significance level of 0.05.
+
+\vspace{0.5cm}
+\lstinputlisting[language=R, firstline=80, lastline=82]{PS01_MT.R}
+
+\vspace{0.5cm}
+\begin{verbatim}
+$D
+[1] 0.1347281
+
+$p_value
+[1] 5.652523e-29
+
+$results_test
+[1] "The distributions are statistically different, 5.65252281681864e-29 
+smaller than 0.05. The null hypothesis is rejected."
+\end{verbatim}
 
 \section*{Question 2}
 \noindent Estimate an OLS regression in \texttt{R} that uses the Newton-Raphson algorithm (specifically \texttt{BFGS}, which is a quasi-Newton method), and show that you get the equivalent results to using \texttt{lm}. Use the code below to create your data.
 \vspace{.5cm}
-\lstinputlisting[language=R, firstline=51,lastline=53]{PS01.R} 
+\lstinputlisting[language=R, firstline=89,lastline=91]{PS01_MT.R} 
+
+
+\vspace{2cm}
+
+\noindent\textbf{Answer 2}\\
+\vspace{0.5cm}
+
+\noindent Initially, the function to be minimized is defined. This function corresponds to the OLS Residual Sum of Squares. It takes as arguments a vector of parameters \texttt{betas}, as well as the variables \texttt{y} and \texttt{x}. Inside the function, the estimated values \texttt{y\_hat} are computed as $\beta_0$ (the first element of the vector \texttt{betas}) plus the product of $\beta_1$ (the second element of the vector \texttt{betas}) and \texttt{x}. The residuals are defined as the difference between the observed values of \texttt{y} and the estimated values.
+
+\noindent To estimate the parameters, the function is optimized using the \texttt{BFGS} method. The initial values for both parameters are set equal to zero.
+
+\vspace{.5cm}
+\lstinputlisting[language=R, firstline=94,lastline=106]{PS01_MT.R} 
+
+\vspace{0.5cm}
+\noindent Afterwards, \texttt{model\_lm} is estimated using the \texttt{lm} function in \texttt{R}.
+
+\vspace{.5cm}
+\lstinputlisting[language=R, firstline=112,lastline=112]{PS01_MT.R} 
+
+\vspace{0.5cm}
+\noindent The estimated coefficients coincide up to numerical precision, confirming the equivalence between the two approaches.
+
+\vspace{0.5cm}
+
+\begin{table}[H]
+	\centering
+	\caption{Coefficient estimations - BFGS optimisation vs LM}
+	\centering
+	\begin{tabular}[t]{lrr}
+		\toprule
+		& lm & BFGS\\
+		\midrule
+		(Intercept) & 0.139 & 0.139\\
+		x & 2.727 & 2.727\\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+
 
 \end{document}
