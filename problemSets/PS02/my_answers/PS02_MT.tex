@@ -1,0 +1,302 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage{graphicx,textcomp}
+\usepackage{natbib}
+\usepackage{setspace}
+\usepackage{fullpage}
+\usepackage{color}
+\usepackage[reqno]{amsmath}
+\usepackage{amsthm}
+\usepackage{fancyvrb}
+\usepackage{amssymb,enumerate}
+\usepackage[all]{xy}
+\usepackage{endnotes}
+\usepackage{lscape}
+\newtheorem{com}{Comment}
+\usepackage{float}
+\usepackage{hyperref}
+\newtheorem{lem} {Lemma}
+\newtheorem{prop}{Proposition}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem{cor}{Corollary}
+\newtheorem{obs}{Observation}
+\usepackage[compact]{titlesec}
+\usepackage{dcolumn}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{multirow}
+\usepackage{xcolor}
+\newcolumntype{.}{D{.}{.}{-1}}
+\newcolumntype{d}[1]{D{.}{.}{#1}}
+\definecolor{light-gray}{gray}{0.65}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{booktabs}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+\lstset{style=mystyle}
+\newcommand{\Sref}[1]{Section~\ref{#1}}
+\newtheorem{hyp}{Hypothesis}
+
+\title{Problem Set 2}
+\date{Due: February 18, 2026}
+\author{Applied Stats II}
+
+
+\begin{document}
+	\maketitle
+	\section*{Instructions}
+	\begin{itemize}
+		\item Please show your work! You may lose points by simply writing in the answer. If the problem requires you to execute commands in \texttt{R}, please include the code you used to get your answers. Please also include the \texttt{.R} file that contains your code. If you are not sure if work needs to be shown for a particular problem, please ask.
+		\item Your homework should be submitted electronically on GitHub in \texttt{.pdf} form.
+		\item This problem set is due before 23:59 on Wednesday February 18, 2026. No late assignments will be accepted.
+
+	\end{itemize}
+
+	\vspace{.25cm}
+
+\noindent We're interested in what types of international environmental agreements or policies people support (\href{https://www.pnas.org/content/110/34/13763}{Bechtel and Scheve 2013)}. So, we asked 8,500 individuals whether they support a given policy, and for each participant, we vary the (1) number of countries that participate in the international agreement and (2) sanctions for not following the agreement. \\
+
+\noindent Load in the data labeled \texttt{climateSupport.RData} on GitHub, which contains an observational study of 8,500 observations.
+
+\begin{itemize}
+	\item
+	Response variable: 
+	\begin{itemize}
+		\item \texttt{choice}: 1 if the individual agreed with the policy; 0 if the individual did not support the policy
+	\end{itemize}
+	\item
+	Explanatory variables: 
+	\begin{itemize}
+		\item
+		\texttt{countries}: Number of participating countries [20 of 192; 80 of 192; 160 of 192]
+		\item
+		\texttt{sanctions}: Sanctions for missing emission reduction targets [None, 5\%, 15\%, and 20\% of the monthly household costs given 2\% GDP growth]
+		
+	\end{itemize}
+	
+\end{itemize}
+
+\newpage
+\noindent Please answer the following questions:
+
+\begin{enumerate}
+	\item
+	Remember, we are interested in predicting the likelihood of an individual supporting a policy based on the number of countries participating and the possible sanctions for non-compliance.
+	\begin{enumerate}
+		\item [] Fit an additive model. Provide the summary output, the global null hypothesis, and $p$-value. Please describe the results and provide a conclusion.
+
+	\end{enumerate}
+	
+	\item
+	If any of the explanatory variables are statistically significant in this model, then:
+	\begin{enumerate}
+		\item
+		For the policy in which nearly all countries participate [160 of 192], how does increasing sanctions from 5\% to 15\% change the odds that an individual will support the policy? (Interpretation of a coefficient)
+		\item
+		For the policy in which very few countries participate [20 of 192], how does increasing sanctions from 5\% to 15\% change the odds that an individual will support the policy? (Interpretation of a coefficient)
+		\item
+		What is the estimated probability that an individual will support a policy if there are 80 of 192 countries participating with no sanctions? 
+	
+	\end{enumerate}
+	\item
+	Would the answers to 2a and 2b potentially change if we included an interaction term in this model? Why? 
+	\begin{itemize}
+		\item Perform a test to see if including an interaction is appropriate.
+	\end{itemize}
+	\end{enumerate}
+
+\vspace{2cm}
+
+\noindent\textbf{Answer 1}\\
+\vspace{0.5cm}
+
+\noindent An additive logistic model is fit on the data. the binary variable \textbf{choice} is chosen as the dependent variable, while the categorical variables \textbf{countries} and \textbf{sanctions} are selected as the explanatory variables. The results are presented in Table 1.
+
+\noindent In order to correctly run the additive model the categorical variables are un-ordered as they were previosuly coded as ordered factors. 
+
+\vspace{0.5cm}
+\lstinputlisting[language=R, firstline=52, lastline=53]{PS02_MT.R}
+
+\vspace{0.5cm}
+
+\noindent Moreover, a global null hypothesis is tested. To evaluate this, a base model is fitted and compared with the additive model using the Likelihood Ratio Test. This test examines whether including the additional coefficients leads to a statistically significant reduction in residual deviance, indicating improved model fit.
+
+
+\vspace{0.5cm}
+\lstinputlisting[language=R, firstline=57, lastline=59]{PS02_MT.R}
+
+\vspace{0.5cm}
+
+
+\begin{table}[H] \centering 
+	\caption{Additive Logistic Regression} 
+	\label{} 
+	\begin{tabular}{@{\extracolsep{5pt}}lc} 
+		\\[-1.8ex]\hline 
+		\hline \\[-1.8ex] 
+		& \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+		\cline{2-2} 
+		\\[-1.8ex] & Agreement with Policy \\ 
+		\hline \\[-1.8ex] 
+		Participating Countries: 80 of 192 & 0.336$^{***}$ \\ 
+		& (0.054) \\ 
+		& \\ 
+		Participating Countries: 160 of 192 & 0.648$^{***}$ \\ 
+		& (0.054) \\ 
+		& \\ 
+		Sanctions: 5 & 0.192$^{***}$ \\ 
+		& (0.062) \\ 
+		& \\ 
+		Sanctions: 15 & $-$0.133$^{**}$ \\ 
+		& (0.062) \\ 
+		& \\ 
+		Sanctions: 20 & $-$0.304$^{***}$ \\ 
+		& (0.062) \\ 
+		& \\ 
+		Constant & $-$0.273$^{***}$ \\ 
+		& (0.054) \\ 
+		& \\ 
+		\hline \\[-1.8ex] 
+		Observations & 8,500 \\ 
+		Log Likelihood & $-$5,784.130 \\ 
+		Akaike Inf. Crit. & 11,580.260 \\ 
+		\hline 
+		\hline \\[-1.8ex] 
+		\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+		\textit{Likelihood ratio test comparing null and full model: $p < 2.2 e^{-16}$.}
+	\end{tabular}  
+\end{table}
+\vspace{1cm}
+
+\noindent As reported in the footnotes of Table 1, a likelihood ratio test comparing the full model to the intercept-only model is statistically significant at the 1\% level (p $<$ 0.01). The full results of the test are reported below
+
+
+\begin{verbatim}
+Analysis of Deviance Table
+
+Model 1: choice ~ countries + sanctions
+Model 2: choice ~ 1
+Resid. Df Resid. Dev Df Deviance  Pr(>Chi)    
+1      8494      11568                          
+2      8499      11783 -5  -215.15 < 2.2e-16 ***
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+\end{verbatim}
+
+\noindent All estimated coefficients are statistically significant at the 1\% level. The likelihood ratio test strongly rejects the global null hypothesis that all slope coefficients are jointly equal to zero, indicating that the additive model improves model fit relative to the null model.
+
+\vspace{1cm}
+
+\textbf{Answer 2(a)}\\
+\vspace{0.5cm}
+
+\noindent The change in \emph{log-odds} associated with increasing sanctions from 5\% to 15\% is given by the difference in their coefficients:
+\[
+\Delta \text{log-odds} = \beta_{\text{15\%}} - \beta_{\text{5\%}}
+\]
+
+\noindent Exponentiating this difference yields the corresponding odds ratio.
+
+\vspace{0.5cm}
+\lstinputlisting[language=R, firstline=71, lastline=73]{PS02_MT.R}
+
+\begin{verbatim}
+"The change in log-odds is equal to: -0.325102799168611 The
+multiplicative factor (OR) associated with the change is equal to:
+0.722453082248403"
+\end{verbatim}
+
+\noindent These results can be interpreted as follows: an increase in sanctions of 10 percentage points, from 5\% to 15\%, decreases the \emph{log-odds} of individually supporting the policy by \textbf{0.325}, on average. Exponentiating this difference gives an \emph{odds ratio} of 0.722, indicating that the odds of supporting the policy decreases by approximately \textbf{27.8\%}, holding all other variables constant.
+
+\vspace{1cm}
+
+\textbf{Answer 2(b)}\\
+\vspace{0.5cm}
+
+\noindent Considering that the only change is in the \textbf{sanctions} coefficients, moving from the \text{5\%} to the \text{15\%} level of sanctions, the change in odds would be the same as the one explained in \textbf{Answer 2(a)}. 
+\noindent Specifically, this increase corresponds to a change in \emph{log-odds} of \textbf{-0.325}, which translates to an \emph{odds ratio} of 0.722. This indicates that the odds of choosing \emph{yes} are multiplied by approximately \textbf{0.722} when changing sanction levels, holding all other variables constant.
+
+\vspace{1cm}
+
+\textbf{Answer 2(c)}\\
+\vspace{0.5cm}
+
+\noindent In order to compute the probability that an individual will support a policy given zero sanctions and 80 out of 192 countries supporting the policy, a specific \texttt{newdata} object is created:
+
+\vspace{0.5cm}
+\lstinputlisting[language=R, firstline=80, lastline=83]{PS02_MT.R}
+
+\vspace{0.5cm}
+\noindent This data is fed to the \texttt{predict} function, requesting predicted probabilities from the additive model (by setting \texttt{type = "response"}). As a check, the log-odds are also predicted with \texttt{type = "link"}, and the probability is computed manually using the formula:
+\[
+\text{P} = \frac{\exp(\text{logodds})}{1 + \exp(\text{logodds})}.
+\]
+
+\vspace{0.5cm}
+\lstinputlisting[language=R, firstline=85, lastline=88]{PS02_MT.R}
+
+\vspace{0.5cm}
+\noindent The two methods give identical results: 
+\begin{verbatim}
+[1] 0.515919 0.515919
+\end{verbatim}
+
+\noindent Therefore, given 0\% sanctions and 80 countries supporting the policy, the estimated probability that an individual will choose to support the policy is, on average, approximately \textbf{51.6\%}.
+
+\vspace{1cm}
+
+\textbf{Answer 3}\\
+\vspace{0.5cm}
+
+\noindent The answers to questions \emph{2(a)} and \emph{2(b)} would potentially change if an interaction term between countries and sanctions were included in the model. In a model with an interaction, the effect of sanctions is no longer constant across countries. Instead, the effect of a given sanction level is determined by both its main effect and the corresponding interaction term with country.
+ 
+\noindent Consequently, the change in log-odds associated with moving from one sanction level to another would differ across countries, because it would incorporate both the difference in the main sanction coefficients and the difference in the relevant interaction coefficients.
+
+\vspace{0.5cm}
+
+\noindent An interaction model is estimated. Afterwards, a Likelihood Ratio Test is performed to assess whether the addition of the interaction term leads to a statistically significant improvement in model fit.
+
+\vspace{0.5cm}
+\lstinputlisting[language=R, firstline=96, lastline=98]{PS02_MT.R}
+
+\vspace{0.5cm}
+\begin{verbatim}
+Analysis of Deviance Table
+
+Model 1: choice ~ countries + sanctions + countries * sanctions
+Model 2: choice ~ countries + sanctions
+Resid. Df Resid. Dev Df Deviance Pr(>Chi)
+1      8488      11562                     
+2      8494      11568 -6  -6.2928   0.3912
+\end{verbatim}
+
+\vspace{0.5cm}
+
+\noindent Considering the \textbf{p-value = 0.39} the null hypothesis is rejected at all the significance levels. Hence, there is no statistical proof that adding an interraction term improves the model fit.
+
+\end{document}
