@@ -1,0 +1,341 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage{graphicx,textcomp}
+\usepackage{natbib}
+\usepackage{setspace}
+\usepackage{fullpage}
+\usepackage{color}
+\usepackage[reqno]{amsmath}
+\usepackage{amsthm}
+\usepackage{fancyvrb}
+\usepackage{amssymb,enumerate}
+\usepackage[all]{xy}
+\usepackage{endnotes}
+\usepackage{lscape}
+\newtheorem{com}{Comment}
+\usepackage{float}
+\usepackage{hyperref}
+\newtheorem{lem} {Lemma}
+\newtheorem{prop}{Proposition}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem{cor}{Corollary}
+\newtheorem{obs}{Observation}
+\usepackage[compact]{titlesec}
+\usepackage{dcolumn}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{multirow}
+\usepackage{xcolor}
+\newcolumntype{.}{D{.}{.}{-1}}
+\newcolumntype{d}[1]{D{.}{.}{#1}}
+\definecolor{light-gray}{gray}{0.65}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+\lstset{style=mystyle}
+\newcommand{\Sref}[1]{Section~\ref{#1}}
+\newtheorem{hyp}{Hypothesis}
+
+\title{Problem Set 3}
+\date{Due: March 25, 2026}
+\author{Applied Stats II}
+
+
+\begin{document}
+	\maketitle
+	\section*{Instructions}
+	\begin{itemize}
+	\item Please show your work! You may lose points by simply writing in the answer. If the problem requires you to execute commands in \texttt{R}, please include the code you used to get your answers. Please also include the \texttt{.R} file that contains your code. If you are not sure if work needs to be shown for a particular problem, please ask.
+\item Your homework should be submitted electronically on GitHub in \texttt{.pdf} form.
+\item This problem set is due before 23:59 on Wednesday March 25, 2026. No late assignments will be accepted.
+	\end{itemize}
+
+	\vspace{.25cm}
+\section*{Question 1}
+\vspace{.25cm}
+\noindent We are interested in how governments' management of public resources impacts economic prosperity. Our data come from \href{https://www.researchgate.net/profile/Adam_Przeworski/publication/240357392_Classifying_Political_Regimes/links/0deec532194849aefa000000/Classifying-Political-Regimes.pdf}{Alvarez, Cheibub, Limongi, and Przeworski (1996)} and is labelled \texttt{gdpChange.csv} on GitHub. The dataset covers 135 countries observed between 1950 or the year of independence or the first year forwhich data on economic growth are available ("entry year"), and 1990 or the last year for which data on economic growth are available ("exit year"). The unit of analysis is a particular country during a particular year, for a total $>$ 3,500 observations. 
+
+\begin{itemize}
+	\item
+	Response variable: 
+	\begin{itemize}
+		\item \texttt{GDPWdiff}: Difference in GDP between year $t$ and $t-1$. Possible categories include: "positive", "negative", or "no change"
+	\end{itemize}
+	\item
+	Explanatory variables: 
+	\begin{itemize}
+		\item
+		\texttt{REG}: 1=Democracy; 0=Non-Democracy
+		\item
+		\texttt{OIL}: 1=if the average ratio of fuel exports to total exports in 1984-86 exceeded 50\%; 0= otherwise
+	\end{itemize}
+	
+\end{itemize}
+\newpage
+\noindent Please answer the following questions:
+
+\begin{enumerate}
+	\item Construct and interpret an unordered multinomial logit with \texttt{GDPWdiff} as the output and "no change" as the reference category, including the estimated constants and coefficients.
+	\item Construct and interpret an ordered multinomial logit with \texttt{GDPWdiff} as the outcome variable, including the estimated cutoff points and coefficients.
+	
+	
+\end{enumerate}
+
+\vspace{2cm}
+\noindent\textbf{Data Manipulation}
+
+\noindent To correctly answer the questions the data is manipulate to be factorised as requested. 
+
+\noindent Initially \textbf{GDPWdiff} is factorised based on the numerical value observed: \emph{"Positive", "Negative" or "No\_change"} (i.e. a change equal to 0).
+
+\vspace{0.5cm}
+\lstinputlisting[language=R, firstline=44, lastline=50]{PS03_MT.R}
+
+\vspace{0.5cm}
+\noindent Afterwards, both explanatory variables (\textbf{REG} and \textbf{OIL}) are converted into factors: the former according to the presence of \emph{democracy}, and the latter based on whether the average ratio of fuel exports is \emph{greater or less than 50\%}.
+
+\noindent The final dataset, with these three variables, is then subselected.
+
+\vspace{0.5cm}
+\lstinputlisting[language=R, firstline=55, lastline=64]{PS03_MT.R}
+
+\vspace{2cm}
+\noindent\textbf{Answer 1}\\
+\vspace{0.5cm}
+
+\noindent The reference category for \texttt{GDPWdiff}, the dependent variable, was explicitated (as \emph{No\_change}). Afterwards, the unordered multinomial logit was estimated. 
+
+\vspace{0.5cm}
+\lstinputlisting[language=R, firstline=68, lastline=69]{PS03_MT.R}
+
+\vspace{0.5cm}
+
+\begin{table}[!htbp] \centering 
+	\caption{Multinomial Logistic Regression} 
+	\label{} 
+	\begin{tabular}{@{\extracolsep{5pt}}lcc} 
+		\\[-1.8ex]\hline 
+		\hline \\[-1.8ex] 
+		& \multicolumn{2}{c}{\textit{Dependent variable:}} \\ 
+		\cline{2-3} 
+		\\[-1.8ex] & Neg GDP Diff & Pos GDP Diff \\ 
+		\\[-1.8ex] & (1) & (2)\\ 
+		\hline \\[-1.8ex] 
+		Democracy & 1.379$^{*}$ & 1.769$^{**}$ \\ 
+		& (0.769) & (0.767) \\ 
+		& & \\ 
+		Low Fuel Exp & 4.784 & 4.576 \\ 
+		& (6.885) & (6.885) \\ 
+		& & \\ 
+		Constant & 3.805$^{***}$ & 4.534$^{***}$ \\ 
+		& (0.271) & (0.269) \\ 
+		& & \\ 
+		\hline \\[-1.8ex] 
+		Akaike Inf. Crit. & 4,690.770 & 4,690.770 \\ 
+		\hline 
+		\hline \\[-1.8ex] 
+		\textit{Note:}  & \multicolumn{2}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+	\end{tabular} 
+\end{table} 
+
+\vspace{0.5cm}
+\noindent The coefficients in an unordered multinomial logit regression can be interpreted as the average change in the log-odds of being in a given category relative to a reference (base) category, holding all other variables constant. Each non-reference level of the dependent categorical variable is therefore compared to the base level.
+
+\noindent In the case under analysis, we compare the transition from \emph{"No Change"} in national GDP between time $t$ and time $t+1$ to both \emph{Negative Change} and \emph{Positive Change}. The coefficients are interpreted in this order, first for the negative outcome and then for the positive one. All coefficients are discussed under the assumption that all other variables are held constant, reflecting an average effect.
+
+\noindent The intercept indicates that the baseline log-odds of being in the negative category relative to the no\_change category are equal to 3.805. It can be interpreted as the log-odds of observing a negative change in GDP for a non-democratic country with a share of fuel exports to total exports below 50\%. 
+
+\noindent Holding all else constant, being a democratic country increases the log-odds of experiencing a negative yearly change in GDP by 1.379 units (statistically significant at the 10\% level), while having a fuel export share above 50\% increases the log-odds by 4.784 units (however, this coefficient is not statistically significant).
+
+\noindent The intercept for the positive outcome can be interpreted as the log-odds of experiencing positive yearly GDP growth relative to no change when all predictors are equal to zero, and it is equal to 4.534. The democracy coefficient indicates an increase of 1.769 units in the log-odds of being in the positive category for democratic countries, when compared to non-democratic ones (statistically significant at the 5\% level). The fuel export coefficient suggests that a share of fuel exports above 50\% increases the log-odds by 4.76 units (however, this effect is, again, not statistically significant).
+
+
+\vspace{1cm}
+\noindent\textbf{Answer 2}\\
+\vspace{0.5cm}
+
+\noindent In order to run the Ordered Logit Model, the dependent variable (\texttt{GDPWdiff}) is appropriately ordered.
+\vspace{0.5cm}
+
+\lstinputlisting[language=R, firstline=80, lastline=82]{PS03_MT.R}
+\vspace{0.5cm}
+
+\noindent Thereafter, the ordered logistic regression is estimated. The coefficients p-values are subsequetnly calculated, as the build-in "\emph{polr}" function doesn't automatically compute them. 
+
+\lstinputlisting[language=R, firstline=84, lastline=91]{PS03_MT.R}
+\vspace{0.5cm}
+
+\begin{table}[H] \centering 
+	\caption{Ordered Logit Model} 
+	\label{} 
+	\begin{tabular}{@{\extracolsep{5pt}}lc} 
+		\\[-1.8ex]\hline 
+		\hline \\[-1.8ex] 
+		& \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+		\cline{2-2} 
+		\\[-1.8ex] & GDP Change \\ 
+		\hline \\[-1.8ex] 
+		Democracy & 0.398$^{***}$ \\ 
+		& (0.075) \\ 
+		& \\ 
+		Low Fuel Exp & $-$0.199$^{*}$ \\ 
+		& (0.116) \\ 
+		& \\ 
+		\hline \\[-1.8ex] 
+		Observations & 3,721 \\ 
+		\hline 
+		\hline \\[-1.8ex] 
+		\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+	\end{tabular} 
+\end{table} 
+
+\vspace{0.5cm}
+\noindent The coefficients in an ordered multinomial logit model are interpreted as the change in the log-odds of being in a higher outcome category, in terms of cumulative probabilities, regardless of the initial category of the observation. In this sense, the parallel lines assumption is imposed in the model.
+
+\noindent In such models, we observe distinct cut-off points (thresholds) that partition the unobserved variable classifying the observed outcomes into the different categories. These thresholds determine category membership on the basis of cumulative log-odds, so that each outcome is defined relative to these cut-off points.
+
+\begin{verbatim}
+	The cut-off points are:
+	-0.7311784153761632 -0.7104850895210132 
+\end{verbatim}
+
+\noindent The first cut-off point represents the threshold between a negative change in GDP from $t$ to $t+1$ and no change, while the second cut-off point corresponds to the threshold between no change and a positive change in GDP.
+
+\noindent The \emph{Democracy} coefficient indicates an average increase of 0.398 in the log-odds of being in a higher outcome category for democratic countries, compared to a non-democratic country, holding all else constant. The coefficient is statistically significant at all conventional levels.
+
+\noindent The \emph{Low Fuel Export} coefficient indicates an average decrease of 0.199 in the log-odds of being in a higher outcome category for countries with a fuel export share above 50\%, compared to those with a lower share of fuel exports, holding all else constant. The coefficient is statistically significant at the 10\% level.
+
+\newpage
+\section*{Question 2} 
+\vspace{.25cm}
+
+\noindent Consider the data set \texttt{MexicoMuniData.csv}, which includes municipal-level information from Mexico. The outcome of interest is the number of times the winning PAN presidential candidate in 2006 (\texttt{PAN.visits.06}) visited a district leading up to the 2009 federal elections, which is a count. Our main predictor of interest is whether the district was highly contested, or whether it was not (the PAN or their opponents have electoral security) in the previous federal elections during 2000 (\texttt{competitive.district}), which is binary (1=close/swing district, 0="safe seat"). We also include \texttt{marginality.06} (a measure of poverty) and \texttt{PAN.governor.06} (a dummy for whether the state has a PAN-affiliated governor) as additional control variables. 
+
+\begin{enumerate}
+	\item [(a)]
+	Run a Poisson regression because the outcome is a count variable. Is there evidence that PAN presidential candidates visit swing districts more? Provide a test statistic and p-value.
+
+	\item [(b)]
+	Interpret the \texttt{marginality.06} and \texttt{PAN.governor.06} coefficients.
+	
+	\item [(c)]
+	Provide the estimated mean number of visits from the winning PAN presidential candidate for a hypothetical district that was competitive (\texttt{competitive.district}=1), had an average poverty level (\texttt{marginality.06} = 0), and a PAN governor (\texttt{PAN.governor.06}=1).
+	
+\end{enumerate}
+
+\vspace{2cm}
+\noindent\textbf{Data Manipulation}\\
+\vspace{0.5cm}
+
+\noindent The original dataset was subselected as to mantain the variables needed for analysis, moreover they were given the right structure.
+
+\lstinputlisting[language=R, firstline=117, lastline=120]{PS03_MT.R}
+\vspace{0.5cm}
+
+\vspace{1cm}
+\noindent\textbf{Answer a}\\
+\vspace{0.5cm}
+
+\noindent A Poisson generalised linear regression is run to predict the number of visits the winning PAN presidential candidate did to each district in the year 2006. Table 3 reports the results.
+
+\vspace{0.5cm}
+\lstinputlisting[language=R, firstline=123, lastline=123]{PS03_MT.R}
+\vspace{0.5cm}
+
+\begin{table}[H] \centering 
+	\caption{Poisson Regression} 
+	\label{} 
+	\begin{tabular}{@{\extracolsep{5pt}}lc} 
+		\\[-1.8ex]\hline 
+		\hline \\[-1.8ex] 
+		& \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+		\cline{2-2} 
+		\\[-1.8ex] & Number of Visits in 2006 \\ 
+		\hline \\[-1.8ex] 
+		Contested District & $-$0.081 \\ 
+		& (0.171) \\ 
+		& \\ 
+		District Poverty & $-$2.080$^{***}$ \\ 
+		& (0.117) \\ 
+		& \\ 
+		PAN affiliated Gov & $-$0.312$^{*}$ \\ 
+		& (0.167) \\ 
+		& \\ 
+		Constant & $-$3.810$^{***}$ \\ 
+		& (0.222) \\ 
+		& \\ 
+		\hline \\[-1.8ex] 
+		Observations & 2,407 \\ 
+		Log Likelihood & $-$645.606 \\ 
+		Akaike Inf. Crit. & 1,299.213 \\ 
+		\hline 
+		\hline \\[-1.8ex] 
+		\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+	\end{tabular} 
+\end{table}
+
+\vspace{0.5cm}
+	
+\noindent The coefficient on \emph{competitive.district} is $-0.081$, with a z-statistic of $-0.477$ and a p-value of $0.634$. The effect is not statistically significant, indicating that there is no evidence that PAN presidential candidates visit swing districts more frequently.
+
+\noindent In fact, the coefficient estimate suggests a slightly negative association; hence, swing districts would possibly receive, on average, fewer visits from the winning PAN presidential candidate. Nonetheless, as mentioned, the effect is not statistically distinguishable from zero.
+
+\vspace{0.5cm}
+\noindent\textbf{Answer b}\\
+\vspace{0.5cm}
+\begin{verbatim}
+ >exp(pois_06$coefficients)
+	(Intercept)    competitive.district1        marginality.06 
+	0.02214298            0.92186932            0.12491227 
+	PAN.governor.061 
+	0.73228985 
+\end{verbatim}
+
+\vspace{0.5cm}
+
+\noindent For ease of interpretation, the coefficients have been exponentiated and are reported above. As such, the exponentiated coefficients can be interpreted as multiplicative effects on the expected count of district visits associated with a one-unit increase in the corresponding predictor, holding all other variables constant. The coefficient associated with the poverty measure (\emph{marginality.06}) is statistically significant at all conventional levels, while the binary variable indicating whether the district governor is affiliated with the PAN presidential candidate is significant at the 10\% level.
+
+\vspace{0.5cm}
+\noindent A one-unit increase in the poverty index, \emph{marginality.06}, leads, on average, to a decrease of about 87.5\% in the expected number of visits, as indicated by the exponentiated coefficient of approximately 0.125. The corresponding coefficient is $-2.080$, implying an expected decrease of around 2.08 units in the log count of visits.
+
+\noindent Similarly, districts with a PAN-affiliated governor are associated with a decrease of approximately 26.8\% in the expected number of visits, as indicated by the exponentiated coefficient of 0.732. The corresponding coefficient is $-0.312$, implying an average decrease of about 0.31 in the log count of visits.
+
+\noindent All interpretations above are made holding all other variables constant.
+
+\vspace{0.5cm}
+\noindent\textbf{Answer c}\\
+\vspace{0.5cm}
+\noindent New data are constructed to predict the expected mean count of district visits for a profile corresponding to a competitive district, with average poverty levels, and a PAN-affiliated district governor.
+
+\vspace{0.5cm}
+\lstinputlisting[language=R, firstline=136, lastline=142]{PS03_MT.R}
+\vspace{0.5cm}
+
+\noindent The results suggest that the expected number of visits, given \emph{new\_data}, is approximately 0.015. As discussed in the interpretation of the coefficients, both a district being competitive and having a PAN-affiliated governor are associated with a decrease in the expected number of visits by the winning PAN presidential candidate, holding all other factors constant.
+
+
+\end{document}
