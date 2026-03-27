@@ -27,7 +27,7 @@ p_load(data.table,estimatr,lfe,
 
 # inteflex version >=1.1.3 needed for the analyses,
 # which can be installed by running the following line:
-# devtools::install_github("xuyiqing/interflex")
+devtools::install_github("xuyiqing/interflex")
 p_load(interflex, install=FALSE, update=FALSE)
 
 source("utils.r")
