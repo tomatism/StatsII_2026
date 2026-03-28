@@ -327,7 +327,7 @@ dev.off()
 
 #### Figure 1b ---> Educational difference between partners (by gender of the responder)
 
-# ---- Prepare counts and percentages ----
+# Prepare counts and percentages
 dt.p <- dt_plot |>
   flat_table(Female, Vignette_gender, Edu_diff, margin = "row") |> 
   as.data.table() |>

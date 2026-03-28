@@ -167,20 +167,20 @@ differences. In particular, the element the authors focus on is the marginal gen
 \noindent As previously mentioned, to estimate the gender childcare bias separately for women and men, the original dataset is split into two subsets based on the gender of the respondent.
 
 \vspace{0.5cm}
-\lstinputlisting[language=R, firstline=449, lastline=452]{Replication_Proj_MT.R}
+\lstinputlisting[language=R, firstline=449, lastline=453]{Replication_Proj_MT.R}
 \vspace{0.5cm}
 
 \noindent The model is then fit for both subsets. Here a snippet of the code is reported; the model was estimated with identical specifications for female and male respondents.
 
 \vspace{0.5cm}
-\lstinputlisting[language=R, firstline=477, lastline=493]{replication_analysis.R}
+\lstinputlisting[language=R, firstline=477, lastline=493]{Replication_Proj_MT.R}
 \vspace{0.5cm}
 
 \noindent The results of the estimation are reported in Figure~\ref{fig:visualisation_2}. The graphs report the marginal change in gender childcare bias given the respondent and their partner's educational gap, for both men and women.
 \noindent Here a snippet of the code to obtain the results is reported.
 
 \vspace{0.5cm}
-\lstinputlisting[language=R, firstline=597, lastline=657]{Replication_Proj_MT.R}
+\lstinputlisting[language=R, firstline=579, lastline=640]{Replication_Proj_MT.R}
 
 \vspace{0.5cm}
 \begin{figure}[H]\centering
@@ -231,7 +231,7 @@ differences. In particular, the element the authors focus on is the marginal gen
 \noindent The coding for the visualisation is an adjustment of the one reported above for Figure~\ref{fig:visualisation_2}; for further detail the full code is reported in the \emph{my\_contribution} R-script. The code reported here refers to the estimation for female respondents; the specification for male respondents is identical but uses the \texttt{dt.m} dataset instead.
 
 \vspace{0.5cm}
-\lstinputlisting[language=R, firstline=860, lastline=872]{Replication_Proj_MT.R}
+\lstinputlisting[language=R, firstline=843, lastline=855]{Replication_Proj_MT.R}
 \vspace{0.5cm}
 
 \begin{figure}[H]\centering
