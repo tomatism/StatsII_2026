@@ -261,33 +261,31 @@ pdf("Figure1a.pdf", family="serif", height = h, width = h*2)
 par(mfrow = c(1,2), oma = c(3, 0, 0, 0)) 
 x.adj <- 0.4
 
-# --- Female respondents ---
+#  Female respondents 
 with(dt.p, plot.a(count, pct, xlim = c(.5,5.5), ylim = c(0, max(pct, na.rm=TRUE)),
                   mar = c(3.5, 3.5, 2, 0)))
 
-with(dt.p.w[dt.p.w$Vignette_gender == "Man", ],
-     rect(count - x.adj, 0, count + x.adj, pct, border = NA, col = "darkgrey"))
 with(dt.p.w[dt.p.w$Vignette_gender == "Woman", ],
+     rect(count - x.adj, 0, count + x.adj, pct, border = NA, col = "darkgrey"))
+with(dt.p.w[dt.p.w$Vignette_gender == "Man", ],
      rect(count - x.adj, 0, count + x.adj, pct, lwd = 2))
-
 abline(h = 0, lwd = 2.5, col = "white")
 
 with(dt.p.w[dt.p.w$Vignette_gender == "Woman", ],
      axis.a(at = as.numeric(Approval), labels = labs,
             pos = -0.5, padj = 0.2, lwd = 1, cex.axis = 0.7))
-
 axis.a(2, hadj = 1)
+
 title.a(main = "Female respondents", font.main = 3,
         ylab = "Percentage of respondents",
         xlab = "Approval of: \n\"[Woman/man] has full-time job while [she/he]\nhas children aged under 3\"")
-
 legend(3.5, par("usr")[4],
        bty = "n",
        title = expression(italic(Assignment)),
        title.adj = 0.1,
        legend = c(
          as.expression(bquote("\"Woman\","~italic(N) == .(dt.p.n[Female == 2 & Vignette_gender == "Woman", Freq]))),
-         as.expression(bquote("\"Man\","~italic(N) == .(dt.p.n[Female == 1 & Vignette_gender == "Man", Freq])))),
+         as.expression(bquote("\"Man\","~italic(N) == .(dt.p.n[Female == 2 & Vignette_gender == "Man", Freq])))),
        fill = c("darkgrey", NA),
        border = c(NA, "black"))
 
@@ -316,12 +314,10 @@ legend(3.5, par("usr")[4],
        title = expression(italic(Assignment)),
        title.adj = 0.1,
        legend = c(
-         as.expression(bquote("\"Woman\","~italic(N) == .(dt.p.n[Female == 2 & Vignette_gender == "Woman", Freq]))),
+         as.expression(bquote("\"Woman\","~italic(N) == .(dt.p.n[Female == 1 & Vignette_gender == "Woman", Freq]))),
          as.expression(bquote("\"Man\","~italic(N) == .(dt.p.n[Female == 1 & Vignette_gender == "Man", Freq])))),
        fill = c("darkgrey", NA),
        border = c(NA, "black"))
-mtext("Note: Approval ranges from Approval (1) to Disapproval (5).",
-      side = 1, line = 1, outer = TRUE, cex = 0.8)
 
 dev.off()
 
@@ -446,6 +442,10 @@ data <- data |>
       labels = c("Man" = 1, "Female" = 2))
   )
 
+
+
+
+
 dt.w <- data |> 
   filter(Female==2)
 
@@ -491,8 +491,6 @@ ix.kern.z.w <- interflex(dt.w,
                          diff.values=c(-1,1),
                          bw = 12
 )
-saveRDS(ix.kern.z.w,file="ix_kern_z_w.rds")
-ix.kern.z.w <- readRDS("ix_kern_z_w.rds")
 ## For men --> core 
 ix.kern.z.m <- interflex(dt.m, 
                          Y="Approval",
@@ -511,6 +509,9 @@ ix.kern.z.m <- interflex(dt.m,
                          diff.values=c(-1,1),
                          bw = 12
 )
+
+saveRDS(ix.kern.z.w,file="ix_kern_z_w.rds")
+ix.kern.z.w <- readRDS("ix_kern_z_w.rds")
 saveRDS(ix.kern.z.m,file="ix_kern_z_m.rds")
 ix.kern.z.m <- readRDS("ix_kern_z_m.rds")
 
@@ -579,7 +580,6 @@ ix.kern.z.m.wgt$figure
 # Creating an object containing my results 
 ls.k <- lapply(list.files(pattern=".rds"), readRDS)
 names(ls.k) <- gsub(".rds","",gsub("_",".",list.files(pattern=".rds")))
-
 ## Figure 2 --> Plotting the main results 
 # Creating a 2 plots figure
 h <- 4
@@ -840,6 +840,7 @@ dev.off()
 
 #### MY CONTRIBUTION ###
 
+## Females --> Linear
 ix.z.w.lin <- interflex(dt.w, 
                         Y="Approval",
                         D="Vignette_gender",
@@ -853,14 +854,8 @@ ix.z.w.lin <- interflex(dt.w,
                         diff.values=c(-1,1),
                         na.rm = TRUE
 )
-saveRDS(ix.z.w.lin,file="ix_z_w.lin.rds")
 
-ix.z.w.lin <- readRDS("ix_z_w.lin.rds")
-ix.z.w.lin$diff.estimate
-ix.z.w.lin$figure
-
-
-## For men --> core 
+## Males --> Linear 
 
 ix.z.m.lin <- interflex(dt.m, 
                         Y="Approval",
@@ -875,6 +870,11 @@ ix.z.m.lin <- interflex(dt.m,
                         diff.values=c(-1,1),
                         na.rm=TRUE,
 )
+
+saveRDS(ix.z.w.lin,file="ix_z_w.lin.rds")
+ix.z.w.lin <- readRDS("ix_z_w.lin.rds")
+ix.z.w.lin$diff.estimate
+ix.z.w.lin$figure
 saveRDS(ix.z.m.lin,file="ix_z_m.lin.rds")
 ix.z.m.lin <- readRDS("ix_z_m.lin.rds")
 ix.z.m.lin$diff.estimate
